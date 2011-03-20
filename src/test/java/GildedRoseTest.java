@@ -10,42 +10,42 @@ import org.junit.Test;
 public class GildedRoseTest {
 	private List<Item> items = new ArrayList<Item>();
 
-	@After
-	public void tearDown() {
+	@After public void tearDown() {
 		items = new ArrayList<Item>();
 	}
 	
-	@Test
-	public void whenAnItemWithoutSpecialRulesIsUpdatedItsQualityAndSellInDaysValuesDecrease() {
-		// Given a list with a 'standard' item
+	@Test public void whenAnItemWithoutSpecialRulesIsUpdatedItsQualityAndSellInDaysValuesDecrease() {
 		givenASingleItem(new Item("Nothing Special", 10, 20));
-		// When the updateQuality() method is called
 		GildedRose.updateQuality();
-		// Then the properties of the item should have decreased
-		assertQualityAndSellInEquals(19, 9, GildedRose.items.get(0));
+		assertSellInAndQualityEquals(9, 19, GildedRose.items.get(0));
 	}
 	
-	@Test
-	public void whenAnItemWithoutSpecialRulesThatIsPastItsSellByDateIsUpdatedTheQualityDecreasesTwiceAsFast() {
-		// Given a list with a 'standard' item which is past its Sell-By date
+	@Test public void whenAnItemWithoutSpecialRulesThatIsPastItsSellByDateIsUpdatedTheQualityDecreasesTwiceAsFast() {
 		givenASingleItem(new Item("Nothing Special", -1, 20));
-		// When the updateQuality() method is called
 		GildedRose.updateQuality();
-		// Then the properties of the item should have decreased, and quality should have decreased by two
-		assertQualityAndSellInEquals(18, -2, GildedRose.items.get(0));
+		assertSellInAndQualityEquals(-2, 18, GildedRose.items.get(0));
 	}
 	
-	@Test
-	public void whenAnItemWithoutSpecialRulesHasAZeroQualityIsUpdatedItsSellInDaysValuesDecreasesButQualityStaysTheSame() {
-		// Given a list with a 'standard' item which already has zero quality
+	@Test public void whenAnItemWithoutSpecialRulesHasAZeroQualityIsUpdatedItsSellInDaysValuesDecreasesButQualityStaysTheSame() {
 		givenASingleItem(new Item("Nothing Special", 10, 0));
-		// When the updateQuality() method is called
 		GildedRose.updateQuality();
-		// Then the sell-in-days of the item should have decreased, but the quality should still be zero
-		assertQualityAndSellInEquals(0, 9, GildedRose.items.get(0));
+		assertSellInAndQualityEquals(9, 0, GildedRose.items.get(0));
 	}
-
-	private void assertQualityAndSellInEquals(int expectedQuality, int expectedSellIn, Item item) {
+	
+	@Test public void whenAgedBrieIsUpdatedItsQualityIncreases() {
+		givenASingleItem(new Item("Aged Brie", 10, 20));
+		GildedRose.updateQuality();
+		assertSellInAndQualityEquals(9, 21, GildedRose.items.get(0));
+	}
+	
+	@Test public void whenAgedBrieIsUpdatedItsQualityCanNeverIncreaseBeyondFifty() {
+		givenASingleItem(new Item("Aged Brie", 10, 50));
+		GildedRose.updateQuality();
+		assertSellInAndQualityEquals(9, 50, GildedRose.items.get(0));
+	}
+	
+	// Test Helpers
+	private void assertSellInAndQualityEquals(int expectedSellIn, int expectedQuality, Item item) {
 		assertEquals(expectedQuality, item.getQuality());
 		assertEquals(expectedSellIn, item.getSellIn());
 	}
