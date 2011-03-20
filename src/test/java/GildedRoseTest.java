@@ -44,6 +44,12 @@ public class GildedRoseTest {
 		assertSellInAndQualityEquals(9, 50, GildedRose.items.get(0));
 	}
 	
+	@Test public void whenSulfurasIsUpdatedNothingChanges() {
+		givenASingleItem(new Item("Sulfuras, Hand of Ragnaros", 10, 50));
+		GildedRose.updateQuality();
+		assertSellInAndQualityEquals(10, 50, GildedRose.items.get(0));
+	}
+	
 	// Test Helpers
 	private void assertSellInAndQualityEquals(int expectedSellIn, int expectedQuality, Item item) {
 		assertEquals(expectedQuality, item.getQuality());
