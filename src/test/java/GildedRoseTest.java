@@ -50,6 +50,30 @@ public class GildedRoseTest {
 		assertSellInAndQualityEquals(10, 50, GildedRose.items.get(0));
 	}
 	
+	@Test public void whenBackstagePassesAreUpdatedTheQualityIncreasesByTwoWithinTenDaysOrLessOfTheirSellBy() {
+		givenASingleItem(new Item("Backstage passes to a TAFKAL80ETC concert", 10, 48));
+		GildedRose.updateQuality();
+		assertSellInAndQualityEquals(9, 50, GildedRose.items.get(0));
+	}
+	
+	@Test public void whenBackstagePassesAreUpdatedTheQualityIncreasesByThreeWithinFiveDaysOrLessOfTheirSellBy() {
+		givenASingleItem(new Item("Backstage passes to a TAFKAL80ETC concert", 5, 47));
+		GildedRose.updateQuality();
+		assertSellInAndQualityEquals(4, 50, GildedRose.items.get(0));
+	}
+	
+	@Test public void whenBackstagePassesAreUpdatedAndTheQualityIncreasesItCannotGoBeyondFifty() {
+		givenASingleItem(new Item("Backstage passes to a TAFKAL80ETC concert", 10, 49));
+		GildedRose.updateQuality();
+		assertSellInAndQualityEquals(9, 50, GildedRose.items.get(0));
+	}
+	
+	@Test public void whenBackstagePassesAreUpdatedAndTheSellByDateHasPassedTheirQualityDropsToZero() {
+		givenASingleItem(new Item("Backstage passes to a TAFKAL80ETC concert", 0, 50));
+		GildedRose.updateQuality();
+		assertSellInAndQualityEquals(-1, 0, GildedRose.items.get(0));
+	}
+	
 	// Test Helpers
 	private void assertSellInAndQualityEquals(int expectedSellIn, int expectedQuality, Item item) {
 		assertEquals(expectedQuality, item.getQuality());
