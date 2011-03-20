@@ -1,81 +1,78 @@
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 
 public class GildedRoseTest {
+	private static final String NOTHING_SPECIAL = "Elixir of the Mongoose";
+	private static final String AGED_BRIE = "Aged Brie";
+	private static final String SULFURAS = "Sulfuras, Hand of Ragnaros";
+	private static final String BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert";
+	
 	private List<Item> items = new ArrayList<Item>();
 
-	@After public void tearDown() {
+	@Before public void tearDown() {
 		items = new ArrayList<Item>();
 	}
 	
 	@Test public void whenAnItemWithoutSpecialRulesIsUpdatedItsQualityAndSellInDaysValuesDecrease() {
-		givenASingleItem(new Item("Nothing Special", 10, 20));
-		GildedRose.updateQuality();
-		assertSellInAndQualityEquals(9, 19, GildedRose.items.get(0));
+		givenASingleItem(new Item(NOTHING_SPECIAL, 10, 20));
+		afterAnUpdateTheExpectedSellInAndQualityAre(9, 19);
 	}
 	
 	@Test public void whenAnItemWithoutSpecialRulesThatIsPastItsSellByDateIsUpdatedTheQualityDecreasesTwiceAsFast() {
-		givenASingleItem(new Item("Nothing Special", -1, 20));
-		GildedRose.updateQuality();
-		assertSellInAndQualityEquals(-2, 18, GildedRose.items.get(0));
+		givenASingleItem(new Item(NOTHING_SPECIAL, -1, 20));
+		afterAnUpdateTheExpectedSellInAndQualityAre(-2, 18);
 	}
 	
 	@Test public void whenAnItemWithoutSpecialRulesHasAZeroQualityIsUpdatedItsSellInDaysValuesDecreasesButQualityStaysTheSame() {
-		givenASingleItem(new Item("Nothing Special", 10, 0));
-		GildedRose.updateQuality();
-		assertSellInAndQualityEquals(9, 0, GildedRose.items.get(0));
+		givenASingleItem(new Item(NOTHING_SPECIAL, 10, 0));
+		afterAnUpdateTheExpectedSellInAndQualityAre(9, 0);
 	}
 	
 	@Test public void whenAgedBrieIsUpdatedItsQualityIncreases() {
-		givenASingleItem(new Item("Aged Brie", 10, 20));
-		GildedRose.updateQuality();
-		assertSellInAndQualityEquals(9, 21, GildedRose.items.get(0));
+		givenASingleItem(new Item(AGED_BRIE, 10, 20));
+		afterAnUpdateTheExpectedSellInAndQualityAre(9, 21);
 	}
 	
 	@Test public void whenAgedBrieIsUpdatedItsQualityCanNeverIncreaseBeyondFifty() {
-		givenASingleItem(new Item("Aged Brie", 10, 50));
-		GildedRose.updateQuality();
-		assertSellInAndQualityEquals(9, 50, GildedRose.items.get(0));
+		givenASingleItem(new Item(AGED_BRIE, 10, 50));
+		afterAnUpdateTheExpectedSellInAndQualityAre(9, 50);
 	}
 	
 	@Test public void whenSulfurasIsUpdatedNothingChanges() {
-		givenASingleItem(new Item("Sulfuras, Hand of Ragnaros", 10, 50));
-		GildedRose.updateQuality();
-		assertSellInAndQualityEquals(10, 50, GildedRose.items.get(0));
+		givenASingleItem(new Item(SULFURAS, 10, 80));
+		afterAnUpdateTheExpectedSellInAndQualityAre(10, 80);
 	}
 	
 	@Test public void whenBackstagePassesAreUpdatedTheQualityIncreasesByTwoWithinTenDaysOrLessOfTheirSellBy() {
-		givenASingleItem(new Item("Backstage passes to a TAFKAL80ETC concert", 10, 48));
-		GildedRose.updateQuality();
-		assertSellInAndQualityEquals(9, 50, GildedRose.items.get(0));
+		givenASingleItem(new Item(BACKSTAGE_PASSES, 10, 48));
+		afterAnUpdateTheExpectedSellInAndQualityAre(9, 50);
 	}
 	
 	@Test public void whenBackstagePassesAreUpdatedTheQualityIncreasesByThreeWithinFiveDaysOrLessOfTheirSellBy() {
-		givenASingleItem(new Item("Backstage passes to a TAFKAL80ETC concert", 5, 47));
-		GildedRose.updateQuality();
-		assertSellInAndQualityEquals(4, 50, GildedRose.items.get(0));
+		givenASingleItem(new Item(BACKSTAGE_PASSES, 5, 47));
+		afterAnUpdateTheExpectedSellInAndQualityAre(4, 50);
 	}
 	
 	@Test public void whenBackstagePassesAreUpdatedAndTheQualityIncreasesItCannotGoBeyondFifty() {
-		givenASingleItem(new Item("Backstage passes to a TAFKAL80ETC concert", 10, 49));
-		GildedRose.updateQuality();
-		assertSellInAndQualityEquals(9, 50, GildedRose.items.get(0));
+		givenASingleItem(new Item(BACKSTAGE_PASSES, 10, 49));
+		afterAnUpdateTheExpectedSellInAndQualityAre(9, 50);
 	}
 	
 	@Test public void whenBackstagePassesAreUpdatedAndTheSellByDateHasPassedTheirQualityDropsToZero() {
-		givenASingleItem(new Item("Backstage passes to a TAFKAL80ETC concert", 0, 50));
-		GildedRose.updateQuality();
-		assertSellInAndQualityEquals(-1, 0, GildedRose.items.get(0));
+		givenASingleItem(new Item(BACKSTAGE_PASSES, 0, 50));
+		afterAnUpdateTheExpectedSellInAndQualityAre(-1, 0);
 	}
 	
 	// Test Helpers
-	private void assertSellInAndQualityEquals(int expectedSellIn, int expectedQuality, Item item) {
+	private void afterAnUpdateTheExpectedSellInAndQualityAre(int expectedSellIn, int expectedQuality) {
+		GildedRose.updateQuality();
+		Item item = GildedRose.items.get(0);
 		assertEquals(expectedQuality, item.getQuality());
 		assertEquals(expectedSellIn, item.getSellIn());
 	}
