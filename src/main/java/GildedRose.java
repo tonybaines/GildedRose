@@ -4,7 +4,8 @@ import java.util.List;
 
 public class GildedRose {
 
-	private static List<Item> items = null;
+	// Made default visibility as a step towards testability
+	static List<Item> items = null;
 
 	/**
 	 * @param args
