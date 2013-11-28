@@ -1,6 +1,8 @@
 *~
 .gradle
+.idea
 .settings/
+bin
 build/
 lib
 refactoring-kata.zip
