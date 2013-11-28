@@ -1,3 +1,7 @@
-refactoring-kata.zip
+*~
+.gradle
 .settings/
+build/
+lib
+refactoring-kata.zip
 target/
