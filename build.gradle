@@ -1,6 +1,4 @@
 apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
 
 dependencies{
   compile([
@@ -21,20 +19,6 @@ repositories {
     dirs 'lib'
   }
   mavenCentral()
-}
-
-
-tasks.withType(FindBugs) {
-  reports {
-    xml.enabled = false
-    html.enabled = true
-  }
-}
-tasks.withType(JDepend) {
-  reports {
-    xml.enabled = false
-    text.enabled = true
-  }
 }
 
 task copyToLib(type: Copy) {
